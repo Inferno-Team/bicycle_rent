@@ -1,3 +1,6 @@
+import 'package:bicycle_rent/core/view_models/delete_response.dart';
+import 'package:bicycle_rent/models/style_response.dart';
+import 'package:stack/stack.dart';
 import 'package:bicycle_rent/core/services/data_service.dart';
 import 'package:bicycle_rent/models/bicycle_response.dart';
 import 'package:bicycle_rent/models/event_response.dart';
@@ -7,7 +10,8 @@ import 'package:bicycle_rent/utils/cache_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:stack/stack.dart';
+
+import 'package:file_picker/file_picker.dart';
 
 class ManagerViewModel extends GetxController with CacheManager {
   final _tabIndex = 0.obs;
@@ -19,11 +23,16 @@ class ManagerViewModel extends GetxController with CacheManager {
   final pageRoute = "/".obs;
   final _arguments = Object().obs;
   final _recentEvent = EventResponse.empty().obs;
+  final _userHistoryList = <UserHistory>[].obs;
   Stack<Object> _argsStack = Stack();
+  final sendFile = {}.obs;
+  final styles = <BicycleStyle>[].obs;
+  final banUserCause = "".obs;
+  final newStyle = BicycleStyle.empty();
 
   final isLoading = false.obs;
   final bickes = <Bicycle>[].obs;
-
+  List<UserHistory> get userHistory => _userHistoryList.value;
   final _titles = [
     "Home",
     "My Bikes",
@@ -38,6 +47,7 @@ class ManagerViewModel extends GetxController with CacheManager {
   List<Bicycle> get bicycles => _bicycles.value;
   get args => _arguments.value;
   EventResponse get event => _recentEvent.value;
+  final bicycleRemoveResponse = DeleteResponse.empty().obs;
 
   onTab(int index) {
     _tabIndex.value = index;
@@ -45,6 +55,9 @@ class ManagerViewModel extends GetxController with CacheManager {
     pageRoute.value = '/${_startPage[index].toLowerCase()}';
     isLoading.value = false;
     _argsStack = Stack();
+    newStyle.empty();
+    styles.value = <BicycleStyle>[];
+    sendFile.value = {'stand': Stand(), 'style': BicycleStyle.empty()};
     if (index == 0) {
       getLastEvent();
     } else if (index == 1) {
@@ -126,10 +139,26 @@ class ManagerViewModel extends GetxController with CacheManager {
     _argsStack.push(bick);
   }
 
-  moveToCurrentUser(currentUser) {
+  moveToAddBickLayout() {
+    pageRoute.value += "/add-bick";
+  }
+
+  moveToCurrentUserLocation(currentUser) {
     _arguments.value = currentUser;
     pageRoute.value += '/currentUser';
     _argsStack.push(currentUser);
+  }
+
+  moveToCurrentUserHistory(currentUser) {
+    _arguments.value = currentUser;
+    pageRoute.value += '/currentUserHistory';
+    _argsStack.push(currentUser);
+  }
+
+  moveToUserBicycleHistory(UserHistory history) {
+    _arguments.value = history.bicycle;
+    pageRoute.value += '/userBicycleHistory';
+    _argsStack.push(history.bicycle);
   }
 
   void getStands() async {
@@ -151,5 +180,50 @@ class ManagerViewModel extends GetxController with CacheManager {
     isLoading.value = true;
     _recentEvent.value = await _service.getRecentEvent(getToken());
     isLoading.value = false;
+  }
+
+  getUserHistory(int userId) async {
+    isLoading.value = true;
+    _userHistoryList.value = await _service.getUserHistory(getToken(), userId);
+    isLoading.value = false;
+  }
+
+  banUser(int userId) async {
+    isLoading.value = true;
+    await _service.banUser(getToken(), userId, banUserCause.value);
+    isLoading.value = false;
+    onBackPressed();
+  }
+
+  deleteBicycle(int bi_id) async {
+    bicycleRemoveResponse.value = await _service.deleteBicycle(getToken(), bi_id);
+  }
+  openFileChooser() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      sendFile['image'] = file;
+    } //   /
+  }
+
+  getAllStyles() async {
+    styles.value = await _service.getAllStyles(getToken());
+    styles.add(
+        BicycleStyle(id: -2, name: "create new style", color: "", size: ""));
+  }
+
+  uploadNewBicycle() async {
+    await _service.uploadNewBicycle(getToken(), sendFile);
+  }
+
+  void addNewStyle() async {
+    styles.removeWhere((element) => element.id == -2);
+//    styles.add(newStyle);
+    final value = await _service.addNewStyle(getToken(), newStyle);
+    if (value.code == 200) {
+      getAllStyles();
+    } else {
+      Fluttertoast.showToast(msg: value.message);
+    }
   }
 }

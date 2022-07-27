@@ -17,7 +17,7 @@ class Stand {
   int bicycleCount;
   int id;
   Stand(
-      {this.name = "",
+      {this.name = "Select a stand",
       this.location = "",
       this.lat = "",
       this.long = "",

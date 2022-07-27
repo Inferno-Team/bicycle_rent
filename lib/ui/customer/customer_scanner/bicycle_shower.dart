@@ -7,10 +7,10 @@ import 'package:bicycle_rent/utils/constance.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SingleBickLayout extends StatelessWidget {
+class RentBickLayout extends StatelessWidget {
   final Bicycle bicycle;
   final Function() onPress;
-  SingleBickLayout({required this.bicycle, required this.onPress});
+  RentBickLayout({required this.bicycle, required this.onPress});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -65,7 +65,7 @@ class SingleBickLayout extends StatelessWidget {
             ],
           ),
           CustomButton(
-            text: "Find on Map",
+            text: "Rent This Bicycle",
             onPressed: onPress,
             width: 200,
           ),

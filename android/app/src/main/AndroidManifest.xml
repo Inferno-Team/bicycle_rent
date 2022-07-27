@@ -1,9 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inferno.bicycle.bicycle_rent">
+   <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
@@ -35,5 +38,11 @@
             android:value="2" />
             <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBTxRYws8sXjYUvDBNtBMgYEafNBtLcl5s"/>
+            <receiver android:name=".BootBroadcastReceiver" >   
+    <intent-filter>   
+        <action android:name="android.intent.action.BOOT_COMPLETED" />  
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" /> 
+    </intent-filter>   
+</receiver> 
     </application>
 </manifest>

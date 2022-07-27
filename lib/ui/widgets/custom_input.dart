@@ -52,7 +52,7 @@ class CustomInput extends StatelessWidget {
                 },
                 child: Icon(
                   suffixIcon,
-                  size: 18.0,
+                  size: 24.0,
                   color: Colors.white,
                 ),
               ),

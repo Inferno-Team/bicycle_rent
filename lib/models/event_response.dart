@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:bicycle_rent/models/bicycle_response.dart';
 import 'package:bicycle_rent/models/stand_response.dart';
 import 'package:bicycle_rent/models/user.dart';
@@ -8,21 +10,31 @@ class CurrentUser {
   final Bicycle bicycle;
   final double long;
   final double lat;
-  final DateTime createAt;
+  final String createAt;
   CurrentUser({
     required this.user,
     required this.bicycle,
-    required this.long, 
+    required this.long,
     required this.lat,
     required this.createAt,
   });
   factory CurrentUser.fromJson(dynamic json) {
+    if (json == null) return CurrentUser.empty();
     return CurrentUser(
         user: User.fromJson(json['user']),
         bicycle: Bicycle.fromJson(json['bicycle']),
         lat: json['lat'] ?? 0.0,
         long: json['long'] ?? 0.0,
-        createAt: DateTime.parse(json['created_at'].toString()));
+        createAt: json['created_at']);
+  }
+  factory CurrentUser.empty() {
+    return CurrentUser(
+      user: User.empty(),
+      bicycle: Bicycle.empty(),
+      long: 0,
+      lat: 0,
+      createAt: '',
+    );
   }
 }
 
@@ -34,7 +46,7 @@ class UserHistory {
   final price;
   final String distance;
   final String time;
-  final DateTime createAt;
+  final String createAt;
 
   UserHistory(
       {required this.user,
@@ -50,6 +62,16 @@ class UserHistory {
     final oldStand = Stand.fromJson(json['old_stand']);
     final lastStand = Stand.fromJson(json['last_stand']);
     final bicycle = Bicycle.fromJson(json['bicycle']);
+    var time = int.parse(json['time']);
+    var timeString = '';
+    if (time >= 60) {
+      var h = time ~/ 60;
+      timeString += "$h H ";
+      var m = time % 60;
+      if (m > 0) {
+        timeString += "$m Min";
+      }
+    }
     return UserHistory(
         bicycle: bicycle,
         user: user,
@@ -57,8 +79,8 @@ class UserHistory {
         lastStand: lastStand,
         distance: json['distance'] ?? "0.0",
         price: json['price'] ?? 0.0,
-        time: json['time'] ?? "0.0",
-        createAt: DateTime.parse(json['created_at']));
+        time: timeString,
+        createAt: json['created_at'] ?? "");
   }
 }
 

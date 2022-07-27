@@ -6,9 +6,13 @@ import 'package:flutter/material.dart';
 class CustomUserHistory extends StatelessWidget {
   final UserHistory userHistory;
   final Function() onTap;
+  final Function()? onLongTap;
 
   const CustomUserHistory(
-      {Key? key, required this.userHistory, required this.onTap})
+      {Key? key,
+      required this.userHistory,
+      required this.onTap,
+      this.onLongTap})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -18,6 +22,7 @@ class CustomUserHistory extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: GestureDetector(
         onTap: onTap,
+        onLongPress: onLongTap,
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: ClipRect(
@@ -101,27 +106,12 @@ class CustomUserHistory extends StatelessWidget {
   }
 
   _createTimeStamps() {
-    var time = "";
-    final date = userHistory.createAt;
-    final now = DateTime.now();
-    Duration compare = now.difference(date);
-    if (compare.inDays > 30) {
-      final months = compare.inDays % 30;
-      time = "$months months ";
-    } else if (compare.inDays > 0) {
-      time = "${compare.inDays} days";
-    } else {
-      if (compare.inHours > 0) {
-        time = "${compare.inHours} hours , ${compare.inMinutes - 60} minutes";
-      } else {
-        time = " ${compare.inMinutes} minutes";
-      }
-    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         CustomText(
-          text: "$time ago",
+          text: userHistory.createAt,
           fontSize: 13,
           color: const Color.fromARGB(255, 238, 236, 236),
         )

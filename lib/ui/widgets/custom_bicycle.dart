@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 
 class CustomBicycle extends StatelessWidget {
   final Bicycle bicycle;
-  final Function() onTap;
-  const CustomBicycle({required this.bicycle,required this.onTap});
+  final Function() onTap, onLongPress;
+  const CustomBicycle(
+      {required this.bicycle, required this.onTap, required this.onLongPress});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         child: ClipRect(
@@ -34,18 +36,25 @@ class CustomBicycle extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(
                         horizontal: 1.6, vertical: .1),
                     height: 10,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(17),
                           bottomRight: Radius.circular(17)),
                       gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(94, 128, 255, 128),
-                          Color.fromARGB(72, 70, 255, 64),
-                          Color.fromARGB(61, 49, 245, 32),
-                          Color.fromARGB(41, 53, 197, 16),
-                        ],
-                        stops: [0.1, 0.3, 0.5, 0.7],
+                        colors: bicycle.isAvailable
+                            ? [
+                                const Color.fromARGB(94, 128, 255, 128),
+                                const Color.fromARGB(72, 70, 255, 64),
+                                const Color.fromARGB(61, 49, 245, 32),
+                                const Color.fromARGB(41, 53, 197, 16),
+                              ]
+                            : [
+                                const Color.fromARGB(255, 255, 128, 145),
+                                const Color.fromARGB(255, 255, 81, 104),
+                                const Color.fromARGB(255, 247, 68, 92),
+                                const Color.fromARGB(255, 253, 36, 65),
+                              ],
+                        stops: const [0.1, 0.3, 0.5, 0.7],
                       ),
                     ),
                   ),

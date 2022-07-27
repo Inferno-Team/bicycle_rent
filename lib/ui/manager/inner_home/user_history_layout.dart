@@ -1,76 +1,52 @@
 import 'package:bicycle_rent/core/view_models/managet_view_model.dart';
-import 'package:bicycle_rent/models/bicycle_response.dart';
+import 'package:bicycle_rent/models/event_response.dart';
+import 'package:bicycle_rent/models/user.dart';
 import 'package:bicycle_rent/ui/widgets/custom_button.dart';
 import 'package:bicycle_rent/ui/widgets/custom_input.dart';
 import 'package:bicycle_rent/ui/widgets/custom_text.dart';
-import 'package:bicycle_rent/utils/constance.dart';
-import 'package:bicycle_rent/ui/widgets/custom_bicycle.dart';
+import 'package:bicycle_rent/ui/widgets/custom_user_history.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-class BikeLayout extends GetWidget<ManagerViewModel> {
-  BikeLayout({Key? key}) : super(key: key);
+class UserHistoryLayout extends GetWidget<ManagerViewModel> {
+  final CurrentUser user;
 
+  UserHistoryLayout({required this.user});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    controller.getUserHistory(user.user.id);
     return Obx(
-      () {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: primaryColor,
-            ),
-          );
-        }
-        return Stack(
-          children: [
-            ListView.builder(
-              itemBuilder: (context, index) => CustomBicycle(
-                bicycle: controller.bickes[index],
-                onTap: () => controller.moveToBick(controller.bickes[index]),
-                onLongPress: () {
-                  Get.bottomSheet(DeleteBickBottomSheetDialog(
-                      size: size,
-                      controller: controller,
-                      bicycle: controller.bickes[index]));
-                },
-              ),
-              itemCount: controller.bickes.length,
-            ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                child: FloatingActionButton(
-                  backgroundColor: primaryColor,
-                  onPressed: () => controller.moveToAddBickLayout(),
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+      () => ListView.builder(
+        itemCount: controller.userHistory.length,
+        itemBuilder: (contextBuilder, index) => CustomUserHistory(
+          userHistory: controller.userHistory[index],
+          onTap: () => controller
+              .moveToUserBicycleHistory(controller.userHistory[index]),
+          onLongTap: () {
+            Get.bottomSheet(
+              BanBottomSheetDialog(
+                  size: size, controller: controller, user: user),
+              backgroundColor: Colors.transparent,
+              isScrollControlled: false,
+            );
+          },
+        ),
+      ),
     );
   }
 }
 
-class DeleteBickBottomSheetDialog extends StatelessWidget {
+class BanBottomSheetDialog extends StatelessWidget {
   final Size size;
   final ManagerViewModel controller;
-  final Bicycle bicycle;
+  final CurrentUser user;
 
-  const DeleteBickBottomSheetDialog(
+  const BanBottomSheetDialog(
       {Key? key,
       required this.size,
       required this.controller,
-      required this.bicycle})
+      required this.user})
       : super(key: key);
 
   @override
@@ -92,9 +68,19 @@ class DeleteBickBottomSheetDialog extends StatelessWidget {
           ),
           const Center(
             child: CustomText(
-              text: "Do you want to delete this bicycle ?",
+              text: "Do you want to ban this user ?",
               margin: EdgeInsets.all(16),
               alignment: Alignment.center,
+            ),
+          ),
+          SizedBox(
+            width: size.width * 0.8,
+            child: CustomInput(
+              onChange: (text) {
+                if (text == null) return;
+                controller.banUserCause.value = text;
+              },
+              text: "optional: Cause",
             ),
           ),
           Container(
@@ -107,11 +93,8 @@ class DeleteBickBottomSheetDialog extends StatelessWidget {
                   width: size.width * 0.3,
                   height: size.height * 0.0667,
                   child: CustomButton(
-                    onPressed: () async {
-                      // controller.banUser(user.user.id);
-                      print(bicycle.id);
-                      await controller.deleteBicycle(bicycle.id);
-                      controller.loadBickes();
+                    onPressed: () {
+                      controller.banUser(user.user.id);
                       Get.close(1);
                     },
                     text: "Yes",

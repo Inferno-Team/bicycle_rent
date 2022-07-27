@@ -1,8 +1,8 @@
 class User {
   final int id;
-  final String? firstName;
-  final String? lastName;
-  final String email;
+   String? firstName;
+   String? lastName;
+   String email;
   final String? NID;
   final String? phone;
   final UserType type;
@@ -32,6 +32,13 @@ class User {
         type: type,
         ip: json['ip'] ?? "",
         email: json['email'] ?? "");
+  }
+  factory User.empty() {
+    return User(
+      id: -1,
+      email: '',
+      type: UserType.customer,
+    );
   }
 }
 

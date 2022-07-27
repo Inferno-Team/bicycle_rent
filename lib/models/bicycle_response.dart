@@ -11,8 +11,10 @@ class Bicycle {
   final BicycleStyle? style;
   final Esp32User? esp32;
   final String imgURL;
+  final int id;
   Bicycle(
-      {this.name = "",
+      {this.id = -1,
+      this.name = "",
       this.lat,
       this.long,
       this.pricePerTime,
@@ -23,6 +25,7 @@ class Bicycle {
       this.imgURL = ""});
   factory Bicycle.fromJson(dynamic json) {
     var _name = json['name'] ?? "";
+    var id = json['id'] ?? -1;
     var _lat = json['lat'] ?? 0.0;
     var _long = json['long'] ?? 0.0;
     var _pricePerTime = json['price_per_time'] ?? "";
@@ -32,6 +35,7 @@ class Bicycle {
     var _esp32 = Esp32User.fromJson(json['esp32']);
     var imgURL = json['img_url'];
     return Bicycle(
+      id: id,
       name: _name,
       lat: _lat,
       long: _long,
@@ -42,6 +46,9 @@ class Bicycle {
       esp32: _esp32,
       imgURL: imgURL,
     );
+  }
+  factory Bicycle.empty() {
+    return Bicycle();
   }
 }
 

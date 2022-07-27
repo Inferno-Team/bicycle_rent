@@ -34,7 +34,7 @@ class MapLayout extends GetWidget<MapViewModel> {
                   } else {
                     return Obx(
                       () => Container(
-                        margin: EdgeInsets.only(top: 24),
+                        margin:const EdgeInsets.only(top: 24),
                         child: GoogleMap(
                           initialCameraPosition: CameraPosition(
                               target: controller

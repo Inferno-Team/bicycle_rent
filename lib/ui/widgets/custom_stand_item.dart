@@ -24,6 +24,7 @@ class CustomStandItem extends GetWidget<ManagerViewModel> {
                   bicycle: controller.bicycles[index],
                   onTap: () =>
                       controller.moveToBicycle(controller.bicycles[index]),
+                      onLongPress: (){},
                 ),
               );
             },

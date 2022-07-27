@@ -1,4 +1,5 @@
 import 'package:bicycle_rent/core/view_models/managet_view_model.dart';
+import 'package:bicycle_rent/ui/manager/bikes/add_bick_layout.dart';
 import 'package:bicycle_rent/ui/manager/bikes/my_bikes_layout.dart';
 import 'package:bicycle_rent/ui/manager/bikes/single_bike_layout.dart';
 import 'package:bicycle_rent/ui/map/map_layout.dart';
@@ -15,11 +16,11 @@ class BickManagerLayout extends GetWidget<ManagerViewModel> {
       },
       child: Obx(() {
         if (controller.index != 1) return Container();
-         
+
         if (controller.pageRoute.value == '/bicycle') {
-         
           return BikeLayout();
         } else if (controller.pageRoute.value == '/bicycle/bick') {
+          
           return SingleBickLayout(
             bicycle: controller.args,
             onPress: () => controller.moveToMap(
@@ -28,12 +29,15 @@ class BickManagerLayout extends GetWidget<ManagerViewModel> {
             ),
           );
         } else if (controller.pageRoute.value == '/bicycle/bick/map') {
+          
           return MapLayout(
             pos: controller.args,
             title: 'Bicycle Location',
           );
+        } else if (controller.pageRoute.value == '/bicycle/add-bick') {
+          return AddBickLayout();
         } else {
-          return Container(child: Text('no child'),);
+          return const Text('no child');
         }
       }),
     );

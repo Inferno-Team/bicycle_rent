@@ -6,6 +6,7 @@ class CustomText extends StatelessWidget {
   final double fontSize;
   final Alignment alignment;
   final EdgeInsets margin;
+  final FontWeight fontWeight;
 
   const CustomText(
       {Key? key,
@@ -13,7 +14,8 @@ class CustomText extends StatelessWidget {
       this.color = Colors.black,
       this.fontSize = 16,
       this.alignment = Alignment.topLeft,
-      this.margin = EdgeInsets.zero})
+      this.margin = EdgeInsets.zero,
+      this.fontWeight = FontWeight.normal})
       : super(key: key);
 
   @override
@@ -23,7 +25,8 @@ class CustomText extends StatelessWidget {
       margin: margin,
       child: Text(
         text,
-        style: TextStyle(color: color, fontSize: fontSize),
+        style:
+            TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
       ),
     );
   }
