@@ -17,7 +17,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  // var keyboardSubscription;
+  var keyboardSubscription;
   final LoginViewModel controller = Get.find(tag: 'login_view_model');
   @override
   Widget build(BuildContext context) {
