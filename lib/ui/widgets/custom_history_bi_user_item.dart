@@ -29,6 +29,7 @@ class CustomHistoryBiUserItem extends StatelessWidget {
               text: title,
               fontSize: 17,
               alignment: Alignment.topCenter,
+              color: Colors.white,
               
             ),
             Icon(

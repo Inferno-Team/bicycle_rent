@@ -25,12 +25,6 @@ class RentBickLayout extends StatelessWidget {
             color: Colors.black,
             margin: EdgeInsets.fromLTRB(15, 15, 5, 10),
           ),
-          CustomText(
-            text: bicycle.name,
-            fontSize: 17,
-            color: Colors.black26,
-            margin: const EdgeInsets.fromLTRB(15, 0, 5, 10),
-          ),
           Container(
             margin: const EdgeInsets.all(25),
             height: size.height * 0.33,
@@ -55,12 +49,12 @@ class RentBickLayout extends StatelessWidget {
               BicycleInfoCircle(
                 text: "${bicycle.pricePerDistance} SP",
                 icon: Icons.timeline,
-                color: Colors.lightGreen,
+                color: primaryColor,
               ),
               BicycleInfoCircle(
                 text: "${bicycle.pricePerTime} SP",
                 icon: Icons.timer,
-                color: Colors.lightGreen,
+                color: primaryColor,
               ),
             ],
           ),
@@ -68,6 +62,7 @@ class RentBickLayout extends StatelessWidget {
             text: "Rent This Bicycle",
             onPressed: onPress,
             width: 200,
+            fontColor: Colors.white,
           ),
         ],
       ),

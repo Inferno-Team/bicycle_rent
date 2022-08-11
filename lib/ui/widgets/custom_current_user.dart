@@ -30,7 +30,7 @@ class CustomCurrentUser extends StatelessWidget {
               color: Colors.redAccent,
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color.fromRGBO(31, 202, 122, 1),
+                  color: primaryColor,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Padding(

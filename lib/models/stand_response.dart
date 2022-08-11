@@ -24,20 +24,34 @@ class Stand {
       this.bicycleCount = 0,
       this.id = 0});
   factory Stand.fromJson(dynamic json) {
+    if (json == null) {
+      return Stand.empty();
+    }
+
     int id = json["id"] ?? 0;
-    String name = json['name'] ?? "";
+    // String name = json['name'] ?? "";
     String location = json["location"] ?? "";
     final count = json["bicycle_count"] ?? 0;
     int bicycleCount = count is int ? count : int.parse(count);
     String lat = json["lat"] ?? "0.0";
     String long = json["long"] ?? "0.0";
     return Stand(
-        name: name,
+        name: "name",
         location: location,
         lat: lat,
         long: long,
         bicycleCount: bicycleCount,
         id: id);
+  }
+  factory Stand.empty() {
+    return Stand(
+      name: "Select a stand",
+      location: "",
+      lat: "",
+      long: "",
+      bicycleCount: 0,
+      id: 0,
+    );
   }
 }
 

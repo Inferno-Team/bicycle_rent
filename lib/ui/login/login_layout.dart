@@ -17,6 +17,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  // var keyboardSubscription;
   final LoginViewModel controller = Get.find(tag: 'login_view_model');
   @override
   Widget build(BuildContext context) {
@@ -51,9 +52,16 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    KeyboardVisibilityController().onChange.listen((isVisible) {
+    keyboardSubscription =
+        KeyboardVisibilityController().onChange.listen((isVisible) {
       controller.keyboardOpen.value = isVisible;
     });
+  }
+
+  @override
+  void dispose() {
+    keyboardSubscription.cancel();
+    super.dispose();
   }
 
   Widget loginFormWidget() {

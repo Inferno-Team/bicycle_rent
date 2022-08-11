@@ -8,12 +8,14 @@ class CustomButton extends StatelessWidget {
   final bool hasBorder;
   final double width;
   final double fontSize;
+  final Color fontColor;
   const CustomButton(
       {Key? key,
       this.text = "",
       required this.onPressed,
       this.hasBorder = false,
       this.width = 0,
+      this.fontColor = Colors.black,
       this.fontSize = 18.0})
       : super(key: key);
 
@@ -43,7 +45,7 @@ class CustomButton extends StatelessWidget {
                 child: Center(
                   child: CustomText(
                     text: text,
-                    color: Colors.black87.withAlpha(150),
+                    color: fontColor,
                     fontSize: fontSize,
                     alignment: Alignment.center,
                   ),

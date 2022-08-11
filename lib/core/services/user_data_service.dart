@@ -3,6 +3,7 @@ import 'package:bicycle_rent/models/check_if_rent_response.dart';
 import 'package:bicycle_rent/models/event_response.dart';
 import 'package:bicycle_rent/models/message_response.dart';
 import 'package:bicycle_rent/models/rent_resopnse.dart';
+import 'package:bicycle_rent/models/return_response.dart';
 import 'package:bicycle_rent/models/user.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +12,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 class UserDataService {
-  static const String apiUrl = "http://192.168.43.114:8000";
+  static const String apiUrl = "http://192.168.43.113:8000";
 
   // static const String apiUrl = "http://192.168.1.110:8000";
   // static const String apiUrl = "http://192.168.1.7:8000";
@@ -96,7 +97,8 @@ class UserDataService {
     }
   }
 
-  returnBicycle(String token, String steps, lastStandId) async {
+  Future<ReturnResponse> returnBicycle(
+      String token, String steps, lastStandId) async {
     Uri uri = Uri.parse(apiUrl + route + '/return_bicycle');
     try {
       http.Response response = await http.post(uri,
@@ -104,8 +106,10 @@ class UserDataService {
           body: {"step_count": steps, "last_stand": "$lastStandId"});
       var body = await json.decode(response.body);
       print(body);
+      return ReturnResponse.fromJson(body);
     } catch (e) {
       print("Error $e");
+      return ReturnResponse.empty();
     }
   }
 
@@ -143,6 +147,43 @@ class UserDataService {
     } catch (e) {
       print("Error $e");
       return User.empty();
+    }
+  }
+
+  editUser(
+      String token, String firstName, String lastName, String email) async {
+    Uri uri = Uri.parse(apiUrl + route + '/edit_user');
+    try {
+      http.Response response = await http.post(
+        uri,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+        body: {
+          'first_name': firstName,
+          'last_name': lastName,
+          'email': email,
+        },
+      );
+      var body = await json.decode(response.body);
+      print(body);
+    } catch (e) {
+      print("Error $e");
+    }
+  }
+
+  resetPassword(String token, String password) async{
+    Uri uri = Uri.parse(apiUrl + route + '/reset_password');
+    try {
+      http.Response response = await http.post(
+        uri,
+        headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+        body: {
+          'password': password,
+        },
+      );
+      var body = await json.decode(response.body);
+      print(body);
+    } catch (e) {
+      print("Error $e");
     }
   }
 }

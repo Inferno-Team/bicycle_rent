@@ -3,6 +3,7 @@ import 'package:bicycle_rent/models/bicycle_response.dart';
 import 'package:bicycle_rent/models/check_if_rent_response.dart';
 import 'package:bicycle_rent/models/event_response.dart';
 import 'package:bicycle_rent/models/rent_resopnse.dart';
+import 'package:bicycle_rent/models/return_response.dart';
 import 'package:bicycle_rent/models/user.dart';
 import 'package:bicycle_rent/ui/login/login_layout.dart';
 import 'package:bicycle_rent/utils/cache_manager.dart';
@@ -27,7 +28,11 @@ class CustomerViewModel extends GetxController with CacheManager {
   final _isLoading = false.obs;
   final _qrBicycle = Bicycle.empty().obs;
   final _user = User.empty().obs;
+  final _ReturnResponse = ReturnResponse.empty().obs;
   final userFirstName = "".obs;
+  final userLastName = "".obs;
+  final userEmail = "".obs;
+  final userPassword = "".obs;
   final _titles = [
     "Home",
     "My History",
@@ -44,18 +49,26 @@ class CustomerViewModel extends GetxController with CacheManager {
   final _steps = '?'.obs;
   String get status => _status.value;
   String get steps => _steps.value;
+
+  ReturnResponse get returnResponse => _ReturnResponse.value;
   String get title => _tabName.value;
   int get index => _tabIndex.value;
   bool get isRenting => _isRenting.value;
+  set setIsRenting(value) => _isRenting.value = value;
   List<UserHistory> get userHistory => _userHistory;
   bool get isLoading => _isLoading.value;
   dynamic get arg => _argument.value;
   User get user => _user.value;
   LatLng get myPosition => _myPosition.value;
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     initPlatformState();
+    var location = await Geolocator.getLastKnownPosition();
+    if (location != null) {
+      print(location);
+      _myPosition.value = LatLng(location.latitude, location.longitude);
+    }
   }
 
   void onPedestrianStatusChanged(PedestrianStatus event) {
@@ -108,6 +121,10 @@ class CustomerViewModel extends GetxController with CacheManager {
   void checkIfUserRent(String token) async {
     _currentUser.value = await _service.checkIfRent(token);
     _isRenting.value = _currentUser.value.code == 200;
+    _myPosition.value = LatLng(
+      _currentUser.value.currentUser.lat,
+      _currentUser.value.currentUser.long,
+    );
   }
 
   void getUserHistory() async {
@@ -120,6 +137,7 @@ class CustomerViewModel extends GetxController with CacheManager {
   Future<void> scanQR() async {
     try {
       String? value = await scanner.scan();
+      print(value);
       if (value != null) {
         _isLoading.value = true;
         getBicyclerByIP(value);
@@ -211,14 +229,20 @@ class CustomerViewModel extends GetxController with CacheManager {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
 
-    var x = await Geolocator.getCurrentPosition();
+    var x = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     LatLng lng = LatLng(x.latitude, x.longitude);
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+    );
     _myPosition.value = lng;
     var token = getToken();
-    /*  Geolocator.getPositionStream().listen((pos) async {
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((pos) async {
       await _service.updateMyLocation(pos.latitude, pos.longitude, token);
       _myPosition.value = LatLng(pos.latitude, pos.longitude);
-    });  */
+    });
   }
 
   static const _fetchBackground = "fetchBackground";
@@ -253,7 +277,7 @@ class CustomerViewModel extends GetxController with CacheManager {
 
   returnBicycle(id) async {
     var token = getToken();
-    await _service.returnBicycle(token, steps, id);
+    _ReturnResponse.value = await _service.returnBicycle(token, steps, id);
   }
 
   scanStandQR() async {
@@ -285,5 +309,18 @@ class CustomerViewModel extends GetxController with CacheManager {
   void getUser() async {
     _user.value = await _service.getUser(getToken());
     userFirstName.value = _user.value.firstName ?? "";
+    userLastName.value = _user.value.lastName ?? "";
+    userEmail.value = _user.value.email;
+  }
+
+  editUser() async {
+    await _service.editUser(
+        getToken(), userFirstName.value, userLastName.value, userEmail.value);
+    Fluttertoast.showToast(msg: "User Edited");
+  }
+
+  void restPassword() async {
+    await _service.resetPassword(getToken(), userPassword.value);
+    Fluttertoast.showToast(msg: "Password reset successfully");
   }
 }

@@ -4,6 +4,7 @@ import 'package:bicycle_rent/ui/manager/inner_home/inner_home_layout.dart';
 import 'package:bicycle_rent/ui/manager/inner_home/user_history_layout.dart';
 import 'package:bicycle_rent/ui/map/map_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -44,7 +45,8 @@ class InnerHomeManager extends GetWidget<ManagerViewModel> {
             ),
           );
         } else {
-          return const Text('no child');
+          SystemNavigator.pop();
+          return const Text('');
         }
       }),
     );

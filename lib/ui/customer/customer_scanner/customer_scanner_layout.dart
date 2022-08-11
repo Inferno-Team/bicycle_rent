@@ -34,6 +34,7 @@ class CustomerScannerLayout extends GetWidget<CustomerViewModel> {
               hasBorder: false,
               text: "Open QR Scanner",
               width: size.width / 2,
+              fontColor:Colors.white
             ),
           )
         ],

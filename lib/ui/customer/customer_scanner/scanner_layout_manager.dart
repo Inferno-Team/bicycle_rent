@@ -12,7 +12,8 @@ class ScannerLayoutManager extends GetWidget<CustomerViewModel> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.pageRoute.value == '/inner') {
+      print(controller.pageRoute.value);
+      if (controller.pageRoute.value == '/inner' ) {
         return const CustomerScannerLayout();
       } else if (controller.pageRoute.value == '/inner/qr-bicycle') {
         return RentBickLayout(bicycle: controller.arg, onPress: () {

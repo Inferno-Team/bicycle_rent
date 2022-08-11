@@ -71,6 +71,8 @@ class UserHistory {
       if (m > 0) {
         timeString += "$m Min";
       }
+    }else{
+      timeString = "$time Min";
     }
     return UserHistory(
         bicycle: bicycle,
@@ -81,6 +83,18 @@ class UserHistory {
         price: json['price'] ?? 0.0,
         time: timeString,
         createAt: json['created_at'] ?? "");
+  }
+  factory UserHistory.empty() {
+    return UserHistory(
+      user: User.empty(),
+      bicycle: Bicycle.empty(),
+      oldStand: Stand.empty(),
+      lastStand: Stand.empty(),
+      distance: "0.0",
+      price: 0.0,
+      time: "",
+      createAt: "",
+    );
   }
 }
 

@@ -12,7 +12,7 @@ class CustomerHomeLayout extends GetWidget<CustomerViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    // controller.onTab(0);
+    controller.onTab(0);
     return Obx(
       () => Scaffold(
         appBar: AppBar(

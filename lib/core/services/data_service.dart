@@ -9,11 +9,12 @@ import 'package:bicycle_rent/models/login_response.dart';
 import 'package:bicycle_rent/models/message_response.dart';
 import 'package:bicycle_rent/models/stand_response.dart';
 import 'package:bicycle_rent/models/style_response.dart';
+import 'package:bicycle_rent/models/user_banned.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 
 class DataService {
-  static const String apiUrl = "http://192.168.43.114:8000";
+  static const String apiUrl = "http://192.168.43.113:8000";
   // static const String apiUrl = "http://192.168.1.110:8000";
   // static const String apiUrl = "http://192.168.1.7:8000";
   final String route = "/api";
@@ -338,8 +339,7 @@ class DataService {
     final Uri uri = Uri.parse(apiUrl + route + loginRoute);
     http.Response response = await http.post(uri, body: {
       'bid': bi.toString(),
-    },
-    headers: {
+    }, headers: {
       HttpHeaders.authorizationHeader: 'Bearer $token',
     });
     try {
@@ -354,6 +354,24 @@ class DataService {
     } catch (e) {
       print('something wrong $e');
       return DeleteResponse.empty();
+    }
+  }
+
+  Future<List<UserBan>> getAllBannedUsers(String token) async {
+    var loginRoute = '/get_all_banned_users';
+
+    final Uri uri = Uri.parse(apiUrl + route + loginRoute);
+    http.Response response = await http.get(uri, headers: {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    });
+    try {
+      var _json = await json.decode(response.body);
+      print(_json);
+      return (_json as List).map((e) => UserBan.fromJson(e)).toList();
+    } catch (e) {
+      print(e);
+      print(response.body);
+      return [];
     }
   }
 }

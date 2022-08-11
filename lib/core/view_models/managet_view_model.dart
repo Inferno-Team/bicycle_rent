@@ -1,5 +1,6 @@
 import 'package:bicycle_rent/core/view_models/delete_response.dart';
 import 'package:bicycle_rent/models/style_response.dart';
+import 'package:bicycle_rent/models/user_banned.dart';
 import 'package:stack/stack.dart';
 import 'package:bicycle_rent/core/services/data_service.dart';
 import 'package:bicycle_rent/models/bicycle_response.dart';
@@ -26,6 +27,7 @@ class ManagerViewModel extends GetxController with CacheManager {
   final _userHistoryList = <UserHistory>[].obs;
   Stack<Object> _argsStack = Stack();
   final sendFile = {}.obs;
+  final _bannedUsers = <UserBan>[].obs;
   final styles = <BicycleStyle>[].obs;
   final banUserCause = "".obs;
   final newStyle = BicycleStyle.empty();
@@ -45,6 +47,7 @@ class ManagerViewModel extends GetxController with CacheManager {
   String get title => _tabName.value;
   List<Stand> get stands => _stands.value;
   List<Bicycle> get bicycles => _bicycles.value;
+  List<UserBan> get bannedUsers =>_bannedUsers.value;
   get args => _arguments.value;
   EventResponse get event => _recentEvent.value;
   final bicycleRemoveResponse = DeleteResponse.empty().obs;
@@ -64,6 +67,8 @@ class ManagerViewModel extends GetxController with CacheManager {
       loadBickes();
     } else if (index == 2) {
       getStands();
+    } else {
+      getAllBannedUsers();
     }
   }
 
@@ -196,8 +201,10 @@ class ManagerViewModel extends GetxController with CacheManager {
   }
 
   deleteBicycle(int bi_id) async {
-    bicycleRemoveResponse.value = await _service.deleteBicycle(getToken(), bi_id);
+    bicycleRemoveResponse.value =
+        await _service.deleteBicycle(getToken(), bi_id);
   }
+
   openFileChooser() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
@@ -225,5 +232,11 @@ class ManagerViewModel extends GetxController with CacheManager {
     } else {
       Fluttertoast.showToast(msg: value.message);
     }
+  }
+  
+  void getAllBannedUsers() async {
+    isLoading.value = true;
+    _bannedUsers.value = await _service.getAllBannedUsers(getToken());
+    isLoading.value = false;
   }
 }

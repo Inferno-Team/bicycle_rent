@@ -30,31 +30,45 @@ class UseSettings extends GetWidget<CustomerViewModel> {
                   ),
                 ),
                 CustomUserSettingsItem(
-                  title: controller.user.lastName ?? "",
+                  title: controller.userLastName.value,
                   icon: Icons.edit,
-                  onTap: () {},
+                  onTap: () {
+                    Get.bottomSheet(EditLastName(size),
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent);
+                  },
                 ),
                 CustomUserSettingsItem(
-                  title: controller.user.email,
+                  title: controller.userEmail.value,
                   icon: Icons.edit,
-                  onTap: () {},
+                  onTap: () {
+                    Get.bottomSheet(EditEmail(size),
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent);
+                  },
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 16),
                   child: Row(
                     children: [
                       CustomButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.bottomSheet(RestPassword(size),
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent);
+                        },
                         text: "Reset Password",
                         width: size.width * 0.33,
                         hasBorder: false,
                         fontSize: 15,
+                        fontColor: Colors.white,
                       ),
                       CustomButton(
-                        onPressed: () {},
+                        onPressed: () => controller.editUser(),
                         text: "Save Changes",
                         hasBorder: false,
                         fontSize: 15,
+                        fontColor: Colors.white,
                         width: size.width * 0.33,
                       ),
                     ],
@@ -123,6 +137,7 @@ class UseSettings extends GetWidget<CustomerViewModel> {
                         controller.user.firstName ?? "";
                     Get.back();
                   },
+                  fontColor: Colors.white,
                   text: "Cancel",
                   hasBorder: false,
                   fontSize: 15,
@@ -132,6 +147,7 @@ class UseSettings extends GetWidget<CustomerViewModel> {
                   onPressed: () {
                     Get.back();
                   },
+                  fontColor: Colors.white,
                   text: "Save",
                   hasBorder: false,
                   fontSize: 15,
@@ -143,5 +159,207 @@ class UseSettings extends GetWidget<CustomerViewModel> {
         ),
       ),
     );
+  }
+
+  Widget EditLastName(Size size) {
+    return Container(
+      height: size.height * 0.334,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(18.0),
+          topRight: Radius.circular(18.0),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const CustomText(
+              text: "Edit Last Name",
+              fontSize: 16,
+              alignment: Alignment.topCenter,
+              fontWeight: FontWeight.w600,
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            CustomInput(
+              text: "Last Name",
+              onChange: (value) {
+                if (value != null) {
+                  controller.userLastName.value = value;
+                }
+              },
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomButton(
+                  onPressed: () {
+                    controller.userLastName.value =
+                        controller.user.lastName ?? "";
+                    Get.back();
+                  },
+                  fontColor: Colors.white,
+                  text: "Cancel",
+                  hasBorder: false,
+                  fontSize: 15,
+                  width: size.width * 0.334,
+                ),
+                CustomButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  fontColor: Colors.white,
+                  text: "Save",
+                  hasBorder: false,
+                  fontSize: 15,
+                  width: size.width * 0.334,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget EditEmail(Size size) {
+    return Container(
+      height: size.height * 0.334,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(18.0),
+          topRight: Radius.circular(18.0),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const CustomText(
+              text: "Edit Email",
+              fontSize: 16,
+              alignment: Alignment.topCenter,
+              fontWeight: FontWeight.w600,
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            CustomInput(
+              text: "Email",
+              onChange: (value) {
+                if (value != null) {
+                  controller.userEmail.value = value;
+                }
+              },
+              type: TextInputType.emailAddress,
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomButton(
+                  onPressed: () {
+                    controller.userEmail.value = controller.user.email;
+                    Get.back();
+                  },
+                  fontColor: Colors.white,
+                  text: "Cancel",
+                  hasBorder: false,
+                  fontSize: 15,
+                  width: size.width * 0.334,
+                ),
+                CustomButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  fontColor: Colors.white,
+                  text: "Save",
+                  hasBorder: false,
+                  fontSize: 15,
+                  width: size.width * 0.334,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget RestPassword(Size size) {
+     return Container(
+      height: size.height * 0.334,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(18.0),
+          topRight: Radius.circular(18.0),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const CustomText(
+              text: "Rest Password",
+              fontSize: 16,
+              alignment: Alignment.topCenter,
+              fontWeight: FontWeight.w600,
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            CustomInput(
+              text: "Password",
+              onChange: (value) {
+                if (value != null) {
+                  controller.userPassword.value = value;
+                }
+              },
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomButton(
+                  onPressed: () {
+                    controller.userPassword.value = "";
+                    Get.back();
+                  },
+                  fontColor: Colors.white,
+                  text: "Cancel",
+                  hasBorder: false,
+                  fontSize: 15,
+                  width: size.width * 0.334,
+                ),
+                CustomButton(
+                  onPressed: () {
+                    controller.restPassword();
+                    Get.back();
+                  },
+                  fontColor: Colors.white,
+                  text: "Save",
+                  hasBorder: false,
+                  fontSize: 15,
+                  width: size.width * 0.334,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  
   }
 }

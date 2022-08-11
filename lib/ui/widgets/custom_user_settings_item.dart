@@ -19,13 +19,13 @@ class CustomUserSettingsItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(16),
       width: double.infinity,
-      height: 50,
+      height: 60,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(4.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -33,12 +33,17 @@ class CustomUserSettingsItem extends StatelessWidget {
               text: title,
               fontSize: 16,
               fontWeight: FontWeight.w600,
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.symmetric(horizontal: 8),
             ),
             GestureDetector(
               onTap: onTap,
-              child: Icon(
-                icon,
-                size: 30,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  icon,
+                  size: 24,
+                ),
               ),
             ),
           ],

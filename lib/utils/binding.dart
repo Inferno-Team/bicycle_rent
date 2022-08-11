@@ -7,9 +7,14 @@ import 'package:get/get.dart';
 class Binding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => LoginViewModel());
+    /*  Get.lazyPut(() => LoginViewModel());
     Get.lazyPut(() => ManagerViewModel());
     Get.lazyPut(() => CustomerViewModel());
-    Get.lazyPut(() => MapViewModel());
+    Get.lazyPut(() => MapViewModel()); */
+
+    Get.put(LoginViewModel());
+    Get.put(ManagerViewModel());
+    Get.put(CustomerViewModel());
+    Get.put(MapViewModel());
   }
 }
